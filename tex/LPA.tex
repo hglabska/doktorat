@@ -10,8 +10,23 @@ Pierwszy etap metody LPA polega na oszacowaniu tempa wystrzeliwania iglic potenc
 MUA^m(z_i, t_j) = \sum^{N_{pop}}_{n=1} M_n(z_i)r_n(t_j).
 \label{MUAdecomposition}
 \end{equation}
-W tym przypadku $N_{pop}$ to liczba populacji, $r_n(t_j)$ - tempo wystrzeliwania iglic potencjału czynnościowego,  $M_n$ - profil prestrzenny MUA dla n-tej populacji. $M_n$ zależy od własności fizjologicznych neurnów w danej populacji, ich rozmieszczenia oraz przewodności elektrycznej ośrodka. Metoda LPA przyjmuje że $M_n$ jest funkcją trapezoidalną, definiowną za pomocą trzech parametrów: $z_{0n}, \ a_n, \ b_n$. Funkcja przyjmuje wartość 0 dla $z_{j}< z_{0n} - a_n/2 - b$ oraz $z_{j} > z_{0n} + a_n/2 + b$, wartość 1 dla $z_{0n} - a_n/2 < z_j < z_{0n} + a_n/2$, jest liniowa w pozostałych przedziałach.
+W tym przypadku $N_{pop}$ to liczba populacji, $r_n(t_j)$ - tempo wystrzeliwania iglic potencjału czynnościowego,  $M_n$ - profil prestrzenny MUA dla n-tej populacji. $M_n$ zależy od własności fizjologicznych neurnów w danej populacji, ich rozmieszczenia oraz przewodności elektrycznej ośrodka. Metoda LPA przyjmuje że $M_n$ jest funkcją trapezoidalną, definiowną za pomocą trzech parametrów: $z_{0n}, \ a_n, \ b_n$. Przyjmuje wartość 0 dla $z_{j}< z_{0n} - a_n/2 - b$ oraz $z_{j} > z_{0n} + a_n/2 + b$, wartość 1 dla $z_{0n} - a_n/2 < z_j < z_{0n} + a_n/2$, jest liniowa w pozostałych przedziałach (patrz fig. \ref{MUAshape}).
 
- 
+W tym etapie wyznaczmy parametry $z_{0n}, \ a_n, \ b_n$, a tym samym determinujemy tempo wystrzeliwania iglic potencjału czynnościowego dla poszczególnych populacji $r_n$ minimalizując błąd \ref{MUAerror}.
+
+\begin{figure}
+\caption{MUA shape profile function}
+\label{MUAshape}
+\includegraphics{../ryciny/MUAshape.png}
+\end{figure}
+
+\begin{equation}
+e_M = \sum^{N_{ch}}_{i=1}\sum^{N_t}_{j=1} \left( MUA(z_i, t_j) - MUA^m(z_i, t_j) \right)^2/ \sum^{N_{ch}}_{i=1}\sum^{N_t}_{j=1} MUA(z_i, t_j)^2.
+\label{MUAerror}
+\end{equation}
 
 \subsection{Modelowanie LFP}
+W tym kroku korzystamy z założenia że sygnał LFP jest wywołany przez iglice potencjał czynnościowego, który możemy zobserwować w sygnal MUA oraz że LFP ma postać produktową. Sygnał LFP rozpisuje się jako:
+\begin{equation}
+ LFP^m(z_i, t_j) = \sum^{N_{pop}}_{n=1}L_n(z_i)(h_n*r_n)(t_j)
+\end{equation}
