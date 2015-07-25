@@ -1,0 +1,17 @@
+\section{Laminar Population Analysis (LPA)}
+Laminar Population Analysis (LPA) \cite{Einevoll2007} jest jedną z metod analizy danych elektrofizologicznych. Podobnie jak wiele innych popularnych metod, rozkłada oryginalny sygnał na składowe, które próbuje zinterpretować w kontekście aktywności poszczególnych populacji komórek. O ile w szeroko stosowanej metodzie PCA (Prinipal Compomnents Analysis) sygnał jest rozkładany na składowe główne, w ICA (Independent Components Analysis) na składowe niezależne, celem LPA jest wyodrębnienie wkładów wywołnych aktywnością poszczególnych populacji. Metoda LPA wychodzi z następujących założeń:
+\begin{itemize}
+\item sygnał LFP jest wywołany przez iglice potencjał czynnościowego, który możemy zobserwować w sygnal MUA
+\item LFP i MUA mają postać produktową,  (lub są sumą kilku składowych o postaci produktowej w gLPA)
+\end{itemize}
+\subsection{Moldelowanie MUA}
+Pierwszy etap metody LPA polega na oszacowaniu tempa wystrzeliwania iglic potencjału czynnościowego. Sygnał MUA jest rozpisany na wkłady pochodące od poszczególnych populacji:
+\begin{equation}
+MUA^m(z_i, t_j) = \sum^{N_{pop}}_{n=1} M_n(z_i)r_n(t_j).
+\label{MUAdecomposition}
+\end{equation}
+W tym przypadku $N_{pop}$ to liczba populacji, $r_n(t_j)$ - tempo wystrzeliwania iglic potencjału czynnościowego,  $M_n$ - profil prestrzenny MUA dla n-tej populacji. $M_n$ zależy od własności fizjologicznych neurnów w danej populacji, ich rozmieszczenia oraz przewodności elektrycznej ośrodka. Metoda LPA przyjmuje że $M_n$ jest funkcją trapezoidalną, definiowną za pomocą trzech parametrów: $z_{0n}, \ a_n, \ b_n$. Funkcja przyjmuje wartość 0 dla $z_{j}< z_{0n} - a_n/2 - b$ oraz $z_{j} > z_{0n} + a_n/2 + b$, wartość 1 dla $z_{0n} - a_n/2 < z_j < z_{0n} + a_n/2$, jest liniowa w pozostałych przedziałach.
+
+ 
+
+\subsection{Modelowanie LFP}
