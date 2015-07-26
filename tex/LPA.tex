@@ -1,10 +1,23 @@
 \section{Laminar Population Analysis (LPA)}
-Laminar Population Analysis (LPA) \cite{Einevoll2007} jest jedną z metod analizy danych elektrofizjologicznych. Podobnie jak wiele innych popularnych metod, rozkłada oryginalny sygnał na składowe, które próbuje zinterpretować w kontekście aktywności poszczególnych populacji komórek. O ile w szeroko stosowanej metodzie PCA (Prinipal Compomnents Analysis) sygnał jest rozkładany na składowe główne, w ICA (Independent Components Analysis) na składowe niezależne, celem LPA jest wyodrębnienie wkładów wywołanych aktywnością poszczególnych populacji. Metoda LPA wychodzi z następujących założeń:
+Laminar Population Analysis (LPA) opublikowana w \cite{Einevoll2007} jest jedną z metod analizy danych elektrofizjologicznych. Podobnie jak wiele innych popularnych metod, rozkłada oryginalny sygnał na składowe, które potem próbuje zinterpretować w kontekście aktywności poszczególnych populacji komórek.
+
+Załóżmy, że mamy dany sygnał $\phi(z_i, t_j)$ z $N_{ch}$ elektrod w $N_t$ punktach czasowych. Możemy go przybliżyć sumą kombinacji funkcji zależnych jedynie od czasu i zależnych jedynie od położenia.
+\begin{equation}
+\phi(z_i, t_j) = \sum_{n}f_n(z_i)g_n(t_j).
+\label{product}
+\end{equation}
+
+W szeroko stosowanej metodzie analizy głównych składowych (PCA - Prinipal Compomnents Analysis) składowe wybierane są w taki sposób by pierwsza z nich wychwyciła jak największą wriancję sygnału, kolejna jak największą wariancję w pozostałej części sygnału itp. Przy czym składowe te są względem siebie ortogonalne. Metoda skladowych niezależnych (ICA - Independent Components Analysis) wykrywa komponenty statystycznie niezależne. Celem LPA jest wyodrębnienie składowych wywołanych aktywnością poszczególnych populacji. 
+
+Metoda LPA wychodzi z następujących założeń:
 \begin{itemize}
 \item sygnał LFP jest wywołany przez iglice potencjał czynnościowego, który możemy zaobserwować w sygnale MUA
-\item LFP i MUA mają postać produktową,  (lub są sumą kilku składowych o postaci produktowej w gLPA)
+\item LFP i MUA mają postać produktową, czyli można je zapisać w postaci \ref{product} (gLPA - generalized Laminar Population Analysis dopuszcza pewne osłabienie tego warunku).
 \end{itemize}
-\subsection{Moldelowanie MUA}
+
+Analiza LPA składa się dwóch etapów. W pierwszym na podstawie MUA określa się tempa wystrzeliwania iglic potencjału czynnościowego oraz profil przestrzenny MUA. W drugim kroku wyznaczamy wejście synaptyczne z poszczególnych populacji i profilu przestrzennego LFP.
+
+\subsection{Moldelowanie populacyjnego MUA}
 Pierwszy etap metody LPA polega na oszacowaniu tempa wystrzeliwania iglic potencjału czynnościowego. Sygnał MUA jest rozpisany na wkłady pochodzące od poszczególnych populacji:
 \begin{equation}
 MUA^m(z_i, t_j) = \sum^{N_{pop}}_{n=1} M_n(z_i)r_n(t_j).
@@ -25,7 +38,7 @@ e_M = \sum^{N_{ch}}_{i=1}\sum^{N_t}_{j=1} \left( MUA(z_i, t_j) - MUA^m(z_i, t_j)
 \label{MUAerror}
 \end{equation}
 
-\subsection{Modelowanie LFP}
+\subsection{Modelowanie populacyjneg LFP}
 W tym kroku korzystamy z założenia że sygnał LFP jest wywołany przez iglice potencjału czynnościowego, który możemy zaobserwować w sygnale MUA oraz że LFP ma postać produktową. Sygnał LFP rozpisuje się jako:
 \begin{equation}
  LFP^m(z_i, t_j) = \sum^{N_{pop}}_{n=1}L_n(z_i)(h*r_n)(t_j),
@@ -50,4 +63,13 @@ Wyznaczamy $\tau,$ $\Delta,$ $L_n$ minimalizując:
 \begin{equation}
 e_L = \sum^{N_{ch}}_{i=1}\sum^{N_t}_{j=1} \left( LFP(z_i, t_j) - LFP^m(z_i, t_j) \right)^2/ \sum^{N_{ch}}_{i=1}\sum^{N_t}_{j=1} LFP(z_i, t_j)^2.
 \label{LFPerror}
+\end{equation}
+
+\subsection{ Uogólninie metody LPA - generalized Laminar Population Analysis (gLPA)}
+
+Założenie, że sygnał LFP można zpisać w postaci \ref{product} nie w pełni oddaje rzeczwistość. Biorąc pod uwagę, że różne procesy związane z pobudzniem postsynaptycznym mają różną skalę czasową oraz zjawisko wewnętrznego filtrowania w drzewach dendrytycznych \cite{Linden2010}.% MUA wpływa na LFP też ... ...% ma na niego wpływ efekt wewnętrzenego filtrownia w dzewach dendrytycznych.
+Ugólniona metoda LPA (gLPA - generalized Laminar Population Analysis ) dopuszcza $K$ ($K \geq 1$) profili przestrzennych LFP oraz odpowiadających im opóźnień w propagacji i wystąpieniu sygnału. 
+\begin{equation}
+ gLFP\textrm{-}K^m(z_i, t_j) =  \sum^{N_{pop}}_{n=1} \sum_{k=1}^K L_n^k(z_i)(h^k*r_n)(t_j),
+ \label{gLFPdecomposition}
 \end{equation}
